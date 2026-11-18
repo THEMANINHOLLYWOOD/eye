@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Eye</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <img src="icons/icon48.png" alt="" width="22" height="22" />
+        <b>Eye</b>
+        <span id="helperDot" class="hdot" title="Agent helper"></span>
+      </div>
+      <div class="quick">
+        <button data-start="eye-mode" title="Make the whole page editable (⌥⇧E)">Eye mode</button>
+        <button data-start="pick-code" title="Pick any part of the page (⌥⇧C)">Pick</button>
+        <button data-start="select-media" title="Select pictures and videos (⌥⇧M)">Select</button>
+      </div>
+    </header>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="bin" class="on">Bin <span id="binCount" class="count"></span></button>
+      <button role="tab" data-tab="agents">Agents <span id="runCount" class="count"></span></button>
+      <button role="tab" data-tab="map">Map</button>
+      <button role="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <main>
+      <!-- BIN -->
+      <section id="tab-bin" class="tab on">
+        <div class="filters" id="filters"></div>
+        <div id="binGrid" class="grid"></div>
+        <div id="binEmpty" class="empty" hidden>
+          <p><b>Your bin is empty.</b></p>
+          <p>Hover any picture or video and hit <kbd>Bin</kbd>. Highlight text for the same. <kbd>⌥⇧M</kbd> picks many at once.</p>
+        </div>
+      </section>
+
+      <!-- AGENTS -->
+      <section id="tab-agents" class="tab">
+        <div id="helperCard" class="card"></div>
+        <div class="card">
+          <h3>New task</h3>
+          <textarea id="taskPrompt" placeholder="Ask the agent to do something with this tab…"></textarea>
+          <label class="tog"><input type="checkbox" id="taskItems" /> <span id="taskItemsLabel">Include selected bin items</span></label>
+          <label class="tog"><input type="checkbox" id="taskPage" checked /> Let it see the current page</label>
+          <div class="row"><span class="grow sm" id="taskMsg"></span><button class="btn go" id="taskRun">Run</button></div>
+        </div>
+        <div class="row between"><h3 class="h">Runs</h3><button class="link" id="clearRuns">Clear finished</button></div>
+        <div id="runList"></div>
+      </section>
+
+      <!-- MAP -->
+      <section id="tab-map" class="tab">
+        <div class="card">
+          <div class="row between"><div class="sm" id="mapSite">—</div><button class="btn go" id="mapScan">Scan site</button></div>
+          <div id="mapStats" class="stats"></div>
+          <div class="row">
+            <input id="mapFilter" placeholder="Filter pages…" />
+          </div>
+          <div class="row">
+            <label class="tog"><input type="checkbox" id="mapHidden" /> Hidden only</label>
+            <label class="tog"><input type="checkbox" id="mapApi" checked /> Show API</label>
+            <span class="grow"></span>
+            <button class="link" id="mapCheck" disabled>Check which open</button>
+          </div>
+          <p class="sm" id="mapNote"></p>
+        </div>
+        <div id="mapList"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="tab-settings" class="tab">
+        <div class="card">
+          <h3>Accounts</h3>
+          <div class="acct" id="acctSbm"></div>
+          <div class="acct" id="acctBrn"></div>
+          <p class="sm">Sending to the BRN admin inbox works without an account. These go with it:</p>
+          <div class="row"><input id="idName" placeholder="Your name" /><input id="idEmail" placeholder="Your email" type="email" /></div>
+          <div class="row"><span class="grow sm" id="idMsg"></span><button class="btn" id="idSave">Save</button></div>
+        </div>
+        <div class="card">
+          <h3>On every page</h3>
+          <label class="tog"><input type="checkbox" id="setHover" /> Bin · Ask · Send buttons on pictures and videos</label>
+          <label class="tog"><input type="checkbox" id="setPill" /> Buttons when you highlight text</label>
+        </div>
+        <div class="card">
+          <h3>Agent</h3>
+          <p class="sm">Runs with Claude Code on this Mac through Eye's helper. It can read and change the page you're on, save to your boards and BRN, and work with files in its own run folder (<code>~/Eye/runs</code>).</p>
+          <label class="tog"><input type="checkbox" id="setCommands" /> Let it run terminal commands too</label>
+          <p class="sm warn" id="cmdWarn" hidden>Web pages can contain text meant to trick an agent. With commands on, a trick could run things on your Mac. Turn it on only for tasks you watch.</p>
+          <div class="row"><span class="sm">Model</span>
+            <select id="setModel">
+              <option value="">Your Claude Code default</option>
+              <option value="fable">Fable</option>
+              <option value="opus">Opus</option>
+              <option value="sonnet">Sonnet</option>
+              <option value="haiku">Haiku (fastest)</option>
+            </select>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Shortcuts</h3>
+          <ul class="keys">
+            <li><kbd>⌥⇧Y</kbd> Open Eye</li>
+            <li><kbd>⌥⇧E</kbd> Eye mode</li>
+            <li><kbd>⌥⇧C</kbd> Pick a piece of the page</li>
+            <li><kbd>⌥⇧M</kbd> Select media</li>
+          </ul>
+          <button class="link" id="openShortcuts">Change shortcuts</button>
+        </div>
+      </section>
+    </main>
+
+    <footer id="actions" class="actions" hidden>
+      <div class="row between"><b id="selCount">0 selected</b><button class="link" id="selClear">Clear</button></div>
+      <div class="row"><select id="dest"></select></div>
+      <input id="newName" placeholder="Name" hidden />
+      <textarea id="sendNote" placeholder="Note (optional)" rows="2"></textarea>
+      <div class="row">
+        <label class="tog" id="asNoteWrap"><input type="checkbox" id="asNote" /> As storynotes</label>
+        <span class="grow"></span>
+        <button class="btn" id="removeSel">Remove</button>
+        <button class="btn go" id="sendSel">Send</button>
+      </div>
+      <div class="row"><input id="askSel" placeholder="Or ask the agent to do something with these…" /><button class="btn" id="askSelGo">Ask</button></div>
+      <div class="sm" id="actMsg"></div>
+    </footer>
+
+    <script src="panel.js" type="module"></script>
+  </body>
+</html>

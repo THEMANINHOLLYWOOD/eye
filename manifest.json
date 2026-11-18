@@ -1,0 +1,82 @@
+{
+  "manifest_version": 3,
+  "name": "Eye",
+  "short_name": "Eye",
+  "version": "1.0.0",
+  "description": "Grab any media or piece of a site, keep it in your bin, send it to Storyboardmore or BRN, hand it to an agent, edit any page, and map every page a site has.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoVHQEZjf6k090jqVzsr+w6nTsNz1Jd8qjTQ/5+Rzni4ghzQnkZl74OQ9uYXzXdL/kZhDpnY/pqIDm8eg3zh+/mHegGbCSxBXlUqlpkb3cBnRCOpdNCMlQTDDkpn23Gq6Kf1cGX8HoMx2mAMS2xa1eAOwgD6bt1blz/biW2OQ3r4keyrZlUWVdwVrrx2cRdl6fpz+bgQwLzlbaky8reCx6qlvEwSuAN1muxcuc/rAii6v3fXeA/Zd9a7Be7G/lwlJRuFihnmlFrTgUyXftdSSlYKavfCwmlAGaeea4ozsE6pqcQRkrOX9aBVjrqGSPLtEf951TIJ1jmgMFsQbotR8kQIDAQAB",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Open Eye",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "panel.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "unlimitedStorage",
+    "identity",
+    "scripting",
+    "activeTab",
+    "sidePanel",
+    "notifications",
+    "userScripts"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+Y"
+      },
+      "description": "Open Eye"
+    },
+    "eye-mode": {
+      "suggested_key": {
+        "default": "Alt+Shift+E"
+      },
+      "description": "Eye mode: edit anything on the page"
+    },
+    "pick-code": {
+      "suggested_key": {
+        "default": "Alt+Shift+C"
+      },
+      "description": "Pick a piece of the page"
+    },
+    "select-media": {
+      "suggested_key": {
+        "default": "Alt+Shift+M"
+      },
+      "description": "Select media on the page"
+    }
+  },
+  "minimum_chrome_version": "120"
+}
