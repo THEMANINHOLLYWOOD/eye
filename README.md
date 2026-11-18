@@ -1,5 +1,7 @@
 # eye
 
+![Eye looks at web pages, pulls a picture, a video and highlighted text into its bin, then maps every page of a site and checks which ones open](media/eye-loop.gif)
+
 one chrome extension that sees everything. grab any media or piece of a site, keep it in your bin, send it to storyboardmore or brn, hand it to an agent, edit any page, map every page a site has
 
 ## what you can do
